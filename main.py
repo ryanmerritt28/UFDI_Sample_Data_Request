@@ -53,17 +53,17 @@ def on_double_click(event):
     # move donation id from index to a column and place it in the front
     df['donation_id_pk'] = df.index
     df = df[['donation_id_pk'] + [col for col in df.columns if col != 'donation_id_pk']]
-    df[['donation_id_pk', 'donor_id_pk', 'aab_num_pos', 'dna_count', 'fresh_pbmc_count', 'heparin_count',
+    df[['donation_id_pk', 'aab_num_pos', 'dna_count', 'fresh_pbmc_count', 'heparin_count',
         'paxgene_count', 'plasma_e_count', 'serum_count', 'rested_pbmc_count', 'tempus_count']] = \
-        df[['donation_id_pk', 'donor_id_pk', 'aab_num_pos', 'dna_count', 'fresh_pbmc_count', 'heparin_count',
+        df[['donation_id_pk', 'aab_num_pos', 'dna_count', 'fresh_pbmc_count', 'heparin_count',
             'paxgene_count', 'plasma_e_count', 'serum_count', 'rested_pbmc_count', 'tempus_count']].astype('Int64')
     df[['dna_count', 'fresh_pbmc_count', 'heparin_count', 'paxgene_count', 'plasma_e_count', 'serum_count',
         'rested_pbmc_count', 'tempus_count']] = \
         df[['dna_count', 'fresh_pbmc_count', 'heparin_count', 'paxgene_count', 'plasma_e_count', 'serum_count',
             'rested_pbmc_count', 'tempus_count']].fillna(0)
     df = df.loc[
-        (df['project'] == 'P01') &
-        (df['cohort'] == 'Diabase')]
+        (df['project'] == 'P01') |
+        (df['cohort'] == 'T1DExchange')]
 
     # is sample request
     if values[0] == 'Samples':
@@ -550,8 +550,9 @@ def login():
         data_request_response = survey_export.export_records(format='df', raw_or_label='label')
         data_request_response = data_request_response.loc[data_request_response['samples_or_data'] == 'Data']
         data_request_response = data_request_response[['samples_or_data', 'name_person',
-                                                       'institution_name', 'data_type_requested',
-                                                       'data_hla_requested', 'data_request_description']]
+                                                       'institution_name', 'data_type',
+                                                       'data_genome_assembly', 'data_snps', 'data_type_other',
+                                                       'data_specific_subjects']]
         data_request_response['institution_name'] = \
             data_request_response['institution_name'].fillna('University of Florida')
         data_request_response = data_request_response.fillna(0)
